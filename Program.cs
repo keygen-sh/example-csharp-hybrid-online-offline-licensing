@@ -11,13 +11,13 @@ var client = new keygen.Client(account: KEYGEN_ACCOUNT_ID, key: KEYGEN_LICENSE_K
 
 // Retrieve the license object
 var license = await client.Me();
-Console.WriteLine($"license={license.ID}");
+Console.WriteLine($"Whoami: license={license.ID}");
 
 // Validate the license
 Console.WriteLine("Validating license...");
 
 var validation = await license.Validate();
-Console.WriteLine($"validation={validation.Code}");
+Console.WriteLine($"Validation: code={validation.Code}");
 
 keygen.Machine machine = null;
 if (validation.NotActivated)
@@ -26,13 +26,13 @@ if (validation.NotActivated)
   Console.WriteLine("Activating license...");
 
   machine = await license.Activate();
-  Console.WriteLine($"machine={machine.ID}");
+  Console.WriteLine($"Activated: machine={machine.ID}");
 }
 
 // Retrieve the license's entitlements
 var entitlements = await license.Entitlements();
 Console.WriteLine(
-  $@"entitlements={string.Join(",", entitlements.Select(e => e.Attributes.Code))}"
+  $"Entitlements: {string.Join(",", entitlements.Select(e => e.Attributes.Code))}"
 );
 
 // Check if offline support is enabled
@@ -55,16 +55,16 @@ if (entitlements.Any(e => e.Attributes.Code == "OFFLINE_SUPPORT"))
 
     if (dataset.Expired)
     {
-      Console.WriteLine($"License file is expired! Expired on {dataset.Expiry}");
+      Console.WriteLine($"License file is expired: expiry={dataset.Expiry}.");
     }
     else
     {
-      Console.WriteLine($"License file is valid! Expires on {dataset.Expiry}");
+      Console.WriteLine($"License file is valid: expiry={dataset.Expiry}.");
     }
 
-    Console.WriteLine($"license={dataset.License.ID}");
+    Console.WriteLine($"Data: license={dataset.License.ID}");
     Console.WriteLine(
-      $@"entitlements={string.Join(",", dataset.Entitlements.Select(e => e.Attributes.Code))}"
+      $"Data: entitlements={string.Join(",", dataset.Entitlements.Select(e => e.Attributes.Code))}"
     );
   }
   else
