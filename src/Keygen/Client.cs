@@ -406,6 +406,8 @@ namespace Keygen
       {
         License = document.Data,
         Entitlements = document.Included,
+        Issued = Convert.ToDateTime(document.Meta.Issued),
+        Expiry = Convert.ToDateTime(document.Meta.Expiry),
       };
     }
 
@@ -416,23 +418,33 @@ namespace Keygen
       public string Sig { get; set; }
     }
 
+    internal class Meta
+    {
+      public string Issued { get; set; }
+      public string Expiry { get; set; }
+      public int TTL { get; set; }
+    }
+
     internal class Document
     {
       public License Data { get; set; }
       // TODO(ezekg) Included should really be polymorphic (i.e. it can have more than just entitlements)
       public List<Entitlement> Included { get; set; } = new();
+      public Meta Meta { get; set; }
     }
 
     public class Dataset
     {
       public License License { get; set; }
       public List<Entitlement> Entitlements { get; set; } = new();
+      public DateTime Issued { get; set; }
+      public DateTime Expiry { get; set; }
 
       public bool Expired
       {
         get
         {
-          return false;
+          return Expiry < new DateTime();
         }
       }
     }

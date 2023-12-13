@@ -47,10 +47,20 @@ if (entitlements.Any(e => e.Attributes.Code == "OFFLINE_SUPPORT"))
   // Verify the license file
   if (lic.Verify(key: KEYGEN_PUBLIC_KEY))
   {
-    Console.WriteLine("License file is valid!");
+    Console.WriteLine("License file verified!");
 
     // Decrypt the license file
     var dataset = lic.Decrypt(key: KEYGEN_LICENSE_KEY);
+    Console.WriteLine("License file decrypted!");
+
+    if (dataset.Expired)
+    {
+      Console.WriteLine($"License file is expired! Expired on {dataset.Expiry}");
+    }
+    else
+    {
+      Console.WriteLine($"License file is valid! Expires on {dataset.Expiry}");
+    }
 
     Console.WriteLine($"license={dataset.License.ID}");
     Console.WriteLine(
